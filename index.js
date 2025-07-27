@@ -130,6 +130,7 @@ if (typeof window !== 'undefined') {
 // Export React components
 export { SendChatHistory } from './SendChatHistory.jsx';
 export { ChatAd } from './ChatAd.jsx';
+export { PageAd } from './PageAd.jsx';
 
 // Export utility function to manually ensure the script is loaded
 export { loadAdSelectScript };
