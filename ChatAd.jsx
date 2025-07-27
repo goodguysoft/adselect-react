@@ -128,8 +128,11 @@ export function ChatAd({
 
     console.log(`${SDK_CONFIG.LOG_PREFIX} Starting to monitor SendChatHistory for ChatAd`);
 
-    // Get initial HTML and generate initial ad
-    const initialHtml = targetElement.innerHTML || "";
+    // Use the innerHTML of the SendChatHistory wrapper itself
+    console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] SendChatHistory wrapper:`, targetElement);
+    console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] SendChatHistory outerHTML:`, targetElement.outerHTML);
+    console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] SendChatHistory innerHTML:`, targetElement.innerHTML);
+    const initialHtml = targetElement.innerHTML || '';
     if (initialHtml.trim()) {
       generateAd(initialHtml, type)
         .catch((error) => {
@@ -140,7 +143,11 @@ export function ChatAd({
 
     // Set up MutationObserver to watch for changes
     observerRef.current = new MutationObserver((mutations) => {
-      const currentHtml = targetElement.innerHTML || "";
+      // Use the innerHTML of the SendChatHistory wrapper itself
+      console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] (Mutation) SendChatHistory wrapper:`, targetElement);
+      console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] (Mutation) SendChatHistory outerHTML:`, targetElement.outerHTML);
+      console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] (Mutation) SendChatHistory innerHTML:`, targetElement.innerHTML);
+      const currentHtml = targetElement.innerHTML || '';
 
       // Debounce rapid changes
       clearTimeout(observerRef.current.debounceTimer);
