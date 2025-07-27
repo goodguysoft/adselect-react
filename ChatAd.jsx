@@ -143,10 +143,6 @@ export function ChatAd({
 
     // Set up MutationObserver to watch for changes
     observerRef.current = new MutationObserver((mutations) => {
-      // Use the innerHTML of the SendChatHistory wrapper itself
-      console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] (Mutation) SendChatHistory wrapper:`, targetElement);
-      console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] (Mutation) SendChatHistory outerHTML:`, targetElement.outerHTML);
-      console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] (Mutation) SendChatHistory innerHTML:`, targetElement.innerHTML);
       const currentHtml = targetElement.innerHTML || '';
 
       // Debounce rapid changes
