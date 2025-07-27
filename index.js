@@ -159,9 +159,14 @@ export const getAdSelectInfo = () => {
   };
 };
 
-// Export constants for external configuration
-export { 
-  ADSELECT_SCRIPT_URL, 
-  SDK_CONFIG, 
-  ERROR_MESSAGES 
+// Export constants for external configuration and ad types
+export {
+  ADSELECT_SCRIPT_URL,
+  SDK_CONFIG,
+  ERROR_MESSAGES,
+  AdTypeText,
+  AdTypeImage,
+  AdTypeBannerMediumRect,
+  AdTypeBannerLeaderboard,
+  AdTypeBannerWideSky
 } from './constants.js';
