@@ -76,15 +76,21 @@ export function ChatAd({
   const generateAd = async (htmlContent, adType) => {
     console.log(`${SDK_CONFIG.LOG_PREFIX} Generating ${adType} ad for content:`, htmlContent.substring(0, 100) + '...');
     await waitForAdSelectSdk();
-    if (!window.AdSelect || typeof window.AdSelect.renderPageAdIntoElement !== 'function') {
-      throw new Error('AdSelect SDK is not loaded or renderPageAdIntoElement is unavailable');
+    if (!window.AdSelect || typeof window.AdSelect.getPageAd !== 'function') {
+      throw new Error('AdSelect SDK is not loaded or getPageAd is unavailable');
     }
     if (!adContainerRef.current) return;
-    await window.AdSelect.renderPageAdIntoElement(
+    // Use getPageAd and render the result into the ad container
+    window.AdSelect.getPageAd(
       apiId,
       apiKey,
+      htmlContent,
       adType,
-      adContainerRef.current.id
+      function(adHtml) {
+        if (adContainerRef.current) {
+          adContainerRef.current.innerHTML = adHtml;
+        }
+      }
     );
   };
 
@@ -129,9 +135,6 @@ export function ChatAd({
     console.log(`${SDK_CONFIG.LOG_PREFIX} Starting to monitor SendChatHistory for ChatAd`);
 
     // Use the innerHTML of the SendChatHistory wrapper itself
-    console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] SendChatHistory wrapper:`, targetElement);
-    console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] SendChatHistory outerHTML:`, targetElement.outerHTML);
-    console.log(`${SDK_CONFIG.LOG_PREFIX} [DEBUG] SendChatHistory innerHTML:`, targetElement.innerHTML);
     const initialHtml = targetElement.innerHTML || '';
     if (initialHtml.trim()) {
       generateAd(initialHtml, type)
