@@ -169,12 +169,13 @@ You can override these styles in your own stylesheet or using CSS Modules.
 
 ---
 
+
 ## See Also
 
-- [JavaScript SDK](http://wiki.vektorone.goodguysoft.com/sdks:javascript)
-- [GoLang SDK](http://wiki.vektorone.goodguysoft.com/sdks:go)
-- [Ad Formats](http://wiki.vektorone.goodguysoft.com/ad_formats)
-- [Getting Started](http://wiki.vektorone.goodguysoft.com/getting_started)
+- [JavaScript SDK](http://wiki.vektorone.goodguysoft.com/doku.php?id=sdks:javascript)
+- [GoLang SDK](http://wiki.vektorone.goodguysoft.com/doku.php?id=sdks:go)
+- [Ad Formats](http://wiki.vektorone.goodguysoft.com/doku.php?id=ad_formats)
+- [Getting Started](http://wiki.vektorone.goodguysoft.com/doku.php?id=getting_started)
 
 ---
 
