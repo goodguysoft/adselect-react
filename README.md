@@ -1,150 +1,180 @@
-# VektorOne SDK
 
-> A React SDK for seamless ad integration and chat history tracking, with automatic loading of the AdSelect external library.
+# VektorOne React SDK
+
+**Full documentation is available on our wiki:**
+http://wiki.vektorone.goodguysoft.com/
 
 ---
 
-## Features
-
-- **Automatic AdSelect Script Loading**: Loads the AdSelect SDK (`adselect.js`) automatically when you import the SDK—no manual script tags needed.
-- **Chat History Tracking**: Easily wrap chat UIs to monitor and extract chat content for ad targeting.
-- **Dynamic Ad Rendering**: Render context-aware ads next to chat or anywhere on the page.
-- **SSR/Browser Safety**: Works in modern browsers and handles server-side rendering gracefully.
+The React SDK by **vektorone.co** provides a set of custom React components for easy integration of contextual ads into React applications. It builds on top of the JavaScript SDK and offers a declarative, JSX-based interface tailored to React workflows.
 
 ---
 
 ## Installation
 
 ```bash
-npm install vektorone-sdk
+npm install git+https://github.com/goodguysoft/adselect-react.git
+```
+
+Import in your component:
+
+```js
+import {
+  SendChatHistory,
+  ChatAd,
+  PageAd
+} from 'vektorone-sdk';
 ```
 
 ---
 
-## Usage
+## Authentication
 
-### 1. Basic Chat Integration
+All components require:
+
+- `apiId` — Your VektorOne API ID
+- `apiKey` — Your secret API key (provided by VektorOne support)
+
+These are mandatory for all SDK operations.
+
+---
+
+## Components
+
+### &lt;SendChatHistory&gt;
+
+Submits a full chat history for context analysis.
+
+**Props:**
+
+- `userId` — Unique identifier for the user
+- `conversationId` — Conversation/session ID
+- `apiId`, `apiKey` — Your VektorOne API credentials
+
+**Usage:**
 
 ```jsx
-import React from 'react';
-import { SendChatHistory, ChatAd } from 'vektorone-sdk';
+<SendChatHistory
+  userId="user-123"
+  conversationId="chat-456"
+  apiId="YOUR_API_ID"
+  apiKey="YOUR_API_KEY"
+>
+  <MyCustomChatComponent />
+</SendChatHistory>
+```
 
-function App() {
-  return (
-    <div>
-      <SendChatHistory
-        userId="user-123"
-        conversationId="conversation-456"
-        apiId="your-api-id"
-        apiKey="your-api-key"
-      >
-        <YourChatComponent />
-      </SendChatHistory>
+🧠 **Note:** You can use any internal chat component. The SDK automatically extracts message content using AI on the backend — no need to wrap each message manually.
 
-      {/* Render an ad based on the chat above */}
-      <ChatAd
-        userId="user-123"
-        conversationId="conversation-456"
-        type="HtmlImageAd"
-        apiId="your-api-id"
-        apiKey="your-api-key"
-      />
-    </div>
-  );
+---
+
+### &lt;ChatAd&gt;
+
+Displays an ad based on previously submitted chat history.
+
+**Props:**
+
+- `userId`, `conversationId` — Same as above
+- `type` — `"Json"`, `"HtmlTextAd"`, `"HtmlImageAd"`, or `"JavaScript"`
+- `callback` — (Optional) JavaScript callback function (only for `JavaScript` type)
+- `apiId`, `apiKey` — Required
+
+**Example:**
+
+```jsx
+<ChatAd
+  userId="user-123"
+  conversationId="chat-456"
+  type="HtmlImageAd"
+  apiId="YOUR_API_ID"
+  apiKey="YOUR_API_KEY"
+/>
+```
+
+---
+
+### &lt;PageAd&gt;
+
+Renders an ad based on the current HTML content of the page.
+
+**Props:**
+
+- `type` — Same as above
+- `callback` — (Optional) for `"JavaScript"` type
+- `apiId`, `apiKey` — Required
+
+**Usage:**
+
+```jsx
+<PageAd
+  type="HtmlTextAd"
+  apiId="YOUR_API_ID"
+  apiKey="YOUR_API_KEY"
+/>
+```
+
+The SDK will use the full `document.documentElement.outerHTML` as input.
+
+---
+
+## CSS and HTML Markup
+
+The SDK renders HTML with predictable CSS classes that you can override.
+
+**Sample Output:**
+
+```html
+<div class="ad-box ad-text">
+  <span class="ad-label">Sponsored</span>
+  <div class="ad-body">Find the best deals on hiking gear →</div>
+</div>
+```
+
+**Available CSS Classes:**
+
+| Class        | Description                  |
+|--------------|------------------------------|
+| `.ad-box`    | Container for ad             |
+| `.ad-text`   | Applied to text-only ads     |
+| `.ad-image`  | For image-based ads          |
+| `.ad-label`  | "Sponsored" label            |
+| `.ad-body`   | Main ad message              |
+| `.ad-icon`   | For image or icon placement  |
+
+You can override these styles in your own stylesheet or using CSS Modules.
+
+**Example Custom Style:**
+
+```css
+.ad-box {
+  background: #fdfdfd;
+  border-left: 3px solid #00aaff;
+  padding: 10px;
+}
+.ad-label {
+  font-size: 0.75rem;
+  color: #888;
 }
 ```
 
-### 2. Render All Ad Types
+---
 
-```jsx
-import {
-  AdTypeText,
-  AdTypeImage,
-  AdTypeBannerMediumRect,
-  AdTypeBannerLeaderboard,
-  AdTypeBannerWideSky
-} from 'vektorone-sdk/constants';
+## Summary of Components
 
-<ChatAd type={AdTypeText} ... />
-<ChatAd type={AdTypeImage} ... />
-<ChatAd type={AdTypeBannerMediumRect} ... />
-<ChatAd type={AdTypeBannerLeaderboard} ... />
-<ChatAd type={AdTypeBannerWideSky} ... />
-```
-
-### 3. Page-Level Ad Example
-
-```jsx
-import { PageAd } from 'vektorone-sdk';
-
-<PageAd
-  type="HtmlTextAd"
-  apiId="your-api-id"
-  apiKey="your-api-key"
-/>  // Renders an ad after the page is fully loaded, using the whole page's text as context
-```
+| Component             | Description                            |
+|-----------------------|----------------------------------------|
+| `<SendChatHistory>`   | Wraps your chat and sends it to backend |
+| `<ChatAd>`            | Renders ad for the chat conversation    |
+| `<PageAd>`            | Renders ad for the entire page content  |
 
 ---
 
-## API Reference
+## See Also
 
-### Components
-
-#### SendChatHistory
-- **userId** (string, required)
-- **conversationId** (string, required)
-- **apiId** (string, required)
-- **apiKey** (string, required)
-- **onHtmlChange** (function, optional): Called when chat HTML changes
-- **waitForAdSelect** (boolean, optional, default: true): Wait for AdSelect before tracking
-- **children** (React element, required): The chat UI to wrap
-
-#### ChatAd
-- **userId, conversationId, apiId, apiKey**: Must match a `SendChatHistory` instance
-- **type** (string, required): One of the exported ad type constants
-- **onError** (function, optional): Called on ad generation error
-
-#### PageAd
-- **type** (string, required): Ad type (e.g., "HtmlTextAd")
-- **apiId, apiKey** (string, required)
-- **onError** (function, optional)
-- Renders an ad after the page is fully loaded, using the entire document's text as context
-
-### Constants
-
-- `AdTypeText`, `AdTypeImage`, `AdTypeBannerMediumRect`, `AdTypeBannerLeaderboard`, `AdTypeBannerWideSky`
-- `ADSELECT_SCRIPT_URL`: The AdSelect script URL
-- `SDK_CONFIG`: SDK configuration object
-
-### Utility Functions
-
-- `loadAdSelectScript()`: Promise that resolves when AdSelect is loaded
-- `isAdSelectScriptLoaded()`: Boolean, true if AdSelect is loaded
-- `getAdSelectInfo()`: Returns `{ available, version, initializedAt, object }`
-
----
-
-## How It Works
-
-1. When you import the SDK, it injects the AdSelect script if not already present.
-2. `SendChatHistory` wraps your chat UI and exposes its HTML for ad targeting.
-3. `ChatAd` finds the matching chat, monitors it, and renders an ad using AdSelect.
-4. `PageAd` renders an ad using the entire page's text as context, after the page is loaded.
-
----
-
-## Development & Testing
-
-Clone the repo and run the demo app:
-
-```bash
-git clone https://github.com/your-username/vektorone-sdk.git
-cd vektorone-sdk
-npm install
-cd ../demo-app
-npm install
-npm run dev
-```
+- [JavaScript SDK](http://wiki.vektorone.goodguysoft.com/sdks:javascript)
+- [GoLang SDK](http://wiki.vektorone.goodguysoft.com/sdks:go)
+- [Ad Formats](http://wiki.vektorone.goodguysoft.com/ad_formats)
+- [Getting Started](http://wiki.vektorone.goodguysoft.com/getting_started)
 
 ---
 
